@@ -8,6 +8,8 @@ class PID:
         self.u_max, self.u_min = u_max, u_min
         self.need_limit = need_limit
         self.counter = 0
+        self.ei = 0
+        self.last_ed = 0
 
     def getControl(self, e, dt):
 

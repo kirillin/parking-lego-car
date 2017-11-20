@@ -30,4 +30,9 @@ class AngleSensor:
 
     def getAngle(self):
         self.value0.seek(0)
-        return int(self.value0.read())
+        angle = int(self.value0.read()) # 0..360
+        if angle <= 180:
+            angle = - angle
+        if angle > 180:
+            angle = 360 - angle
+        return angle
