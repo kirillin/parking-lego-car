@@ -1,5 +1,42 @@
 \newpage
 \section{Управление движением робота}
+\subsection{Кинематическая модель}
+Кинематическая модель робота имеет вид~\cite{survey}:
+\begin{equation}\label{eq_robot_kinematic_model}
+    \left\{
+    \begin{aligned}
+        & \dot{x} = v \cos \theta \\
+        & \dot{y} = v \sin \theta \\
+        & \dot{\theta} = \omega
+    \end{aligned}
+    \right.
+\end{equation}
+где $x$, $y$~--- декартовы координаты точки~$C$, являющейся серединой задней оси (см.~рисунок~\ref{img_kinematic_model_picture}); $\theta$~--- угол поворота робота (угол между осями абсцисс неподвижной системы координат $Ox_0y_0$ и системы координат $Ox_1y_1$, жёстко связанной с роботом); $v$~--- проекция скорости~$\vec{v}$ точки~$C$ на ось абсцисс системы координат~$Ox_1y_1$\!\footnote{В~данной работе проскальзывание задних колес робота считается отсутствующим, а, следовательно, вектор $\vec{v}$~--- всегда коллинеарным оси абсцисс системы координат~$Ox_1y_1$.}; $\omega$~--- угловая скорость вращения робота.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{kinematic_model_picture.pdf}
+    \caption{Чертеж-пояснение к кинематической модели робота.}
+    \label{img_kinematic_model_picture}
+\end{figure}
+
+
+
+\subsection{Локализация робота}
+В~качестве угла~$\theta$ и угловой скорости~$\omega$ в работе использовались угол и угловая скорость, возвращаемые установленным на робота датчиком-гироскопом.
+Координаты $x$ и $y$, в свою очередь, непосредственно не измерялись, а рассчитывались с использованием первых двух уравнений модели~\eqref{eq_robot_kinematic_model}.
+При этом линейная скорость точки~$C$ с учетом третьего пункта перечня, представленного в разделе~\ref{part_robot_features}, определялась в соответствии со следующим выражением
+\begin{equation}
+    v = \underline{\omega} R,
+\end{equation}
+где $\underline{\omega}$~--- угловая скорость вращения вала тягового двигателя, $R$~--- радиус задних колес робота.
+
+Состоятельность описанного принципа локализации робота была проверена с помощью сторонней системы технического зрения.
+Подробности соответствующих экспериментов и полученные результаты доступны в Приложении~\ref{app_cv_system}.
+
+
+
+\subsection{Контроллеры движения}
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{control_system.pdf}
@@ -36,15 +73,3 @@ v = \omega_1 \cdot R,
 & v_{des} = \xi \\
 & \omega_{des} = \frac{-u_1 \sin \theta + u_2 \cos \theta}{\xi} \label{last}
 \end{align}
-
-Кинематическая модель робота \cite{de_luca, survey}:
-\begin{equation}
-\left\{
-\begin{aligned}
-& \dot{x} = v \cos \theta \\
-& \dot{y} = v \sin \theta \\
-& \dot{\theta} = \frac{v}{L} \tan{\varphi}
-\end{aligned}
-\right.
-\end{equation}
-где $\varphi = L / r$, где в свою очередь $r$~--- радиус дуги, по которой движется робот; у мотоцикла и трицикла это угол поворота рулевого колеса.
