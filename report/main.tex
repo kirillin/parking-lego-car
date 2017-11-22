@@ -1,10 +1,10 @@
-\documentclass[utf8, emptystyle, hpadding=5mm, 12pt]{eskdtext}
+\documentclass[utf8, emptystyle, hpadding=5mm, 12pt, footnoteasterisk]{eskdtext}
 
 \usepackage{eskdplain}
 \usepackage{amsfonts, amsmath, amssymb}
 
 \newcommand{\No}{\textnumero}
-\graphicspath{./images/}
+\graphicspath{{./images/}}
 
 \ESKDsectSkip{section}{5mm}{5mm}
 \ESKDsectSkip{subsection}{3mm}{3mm}
@@ -14,7 +14,9 @@
     \input{title_page}
     \addtocounter{page}{1}
     \tableofcontents
-    \newpage
+    \input{introduction}
     \input{body}
+    \input{conclusion}
     \input{sources}
+    \input{appendix_cv_system}
 \end{document}
