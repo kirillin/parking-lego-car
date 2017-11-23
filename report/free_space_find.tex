@@ -1,3 +1,90 @@
 \newpage
 \section{Поиск парковочного места}
-Текст
+
+В этой работе рассматривается правостороннее движение, поэтому парковка производится с правой стороны дороги. 
+
+Поиск парковочного места осуществляется по тому же принципу, что и в реальной жизни: робот-машинка двигается параллельно припаркованному ряду автомобилей с постоянной скоростью $v$, одновременно сканируя пространство справа от себя. Сканирование олицетворяет собой измерение расстояния между роботом и объектами справа от него.
+Измерения производятся двумя ультразвуковыми дальномерами ($S_{front}$ и $S_{rear}$), расположение которых на роботе изображено на рисунке~\ref{robot_and_us_sensors}.
+
+% Важно! Передний датчик покрасить в красный, задний в синий!
+\begin{figure}[h!]
+	\begin{minipage}[h]{0.47\textwidth}
+		\centering{ \includegraphics[width=\textwidth, draft]{first.jpg} \\ a) вид сверху}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[h]{0.47\textwidth}
+		\centering{ \includegraphics[width=\textwidth, draft]{second.jpg} \\ б) вид справа (по ходу движения)}
+	\end{minipage}
+	\caption{Расположение ультразвуковых дальномеров.}
+	\label{robot_and_us_sensors}
+\end{figure}
+
+Измерения показаний ультразвуковых дальномеров представляется в локальной СК робота в точками ($p_{1}$ и $p_{2}$)~\eqref{us_points}. После чего преобразуются в глобальную СК путем перемножения матрицы однородных преобразования $H$ и соответствующей измеренной точки~\eqref{}--\eqref{label}
+
+\begin{equation}\label{us_points}
+p_{1} = 
+\begin{bmatrix}
+x_{p_1} \\
+y_{p_1} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+L \\
+- (S_{front} + d) \\
+\end{bmatrix}\!\!;~
+p_{2} = 
+\begin{bmatrix}
+x_{p_2} \\
+y_{p_2} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+-l \\
+- (S_{rear} + d) \\
+\end{bmatrix}\!\!.
+\end{equation}
+где $L$~--- база робота-машинки; $l$~--- расстояние между задней осью и ультразвуковым дальномером, закрепленным на задней части робота; $d$~--- расстояние от продольной оси робота до сенсоров дальномеров.
+
+\begin{equation}
+	H = 
+	\begin{bmatrix}
+		\cos{\theta} & -\sin{\theta} & 0 & x \\
+		\sin{\theta} & \cos{\theta} & 0 & y \\
+		0 & 0 & 1 & 0\\
+		0 & 0 & 0 & 1
+	\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+	P = H * p = 
+	\begin{bmatrix}
+		x_P\\ y_P\\0\\1
+	\end{bmatrix}
+	= 
+	\begin{bmatrix}
+		\cos{\theta} & -\sin{\theta} & 0 & x \\
+		\sin{\theta} & \cos{\theta} & 0 & y \\
+		0 & 0 & 1 & 0\\
+		0 & 0 & 0 & 1
+	\end{bmatrix} 
+	*
+	\begin{bmatrix}
+		x_p \\ y_p \\ 0\\ 1
+	\end{bmatrix}
+\end{equation}
+
+В результате описанного выше сканирования строится карта, на которую наносятся проекции препятствий на плоскость дорожного полотна. На рисунке~\ref{map} показан пример такой карты.
+
+\begin{figure}[h!]
+	\begin{minipage}[h]{0.47\textwidth}
+		\centering{ \includegraphics[width=\textwidth, draft]{first.jpg} \\ a) реальная карта}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[h]{0.47\textwidth}
+		\centering{ \includegraphics[width=\textwidth, draft]{second.jpg} \\ б) результаты сканирования}
+	\end{minipage}
+	\caption{Пример карты.}
+	\label{map}
+\end{figure}
+
+
