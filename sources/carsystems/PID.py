@@ -9,17 +9,16 @@ class PID:
         self.need_limit = need_limit
         self.counter = 0
         self.ei = 0
-        self.last_ed = 0
+        self.last_e = 0
 
     def getControl(self, e, dt):
 
         if self.counter == 1:
-            self.ei = 0.0
             ed = 0
         else:
             self.ei += e * dt
-            ed = (e - self.last_ed) / dt
-        self.last_ed = e
+            ed = (e - self.last_e) / dt
+        self.last_e = e
 
         u = self.kp * e + self.ki * self.ei + self.kd * ed
 

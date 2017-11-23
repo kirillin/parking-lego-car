@@ -6,7 +6,7 @@ from math import pi, tan, cos, sin
 from ev3dev.auto import *
 
 from AngleSensor import AngleSensor
-from Robots import LegoCar
+from sources.carsystems.Robots import LegoCar
 from Odometry import Odometry
 
 

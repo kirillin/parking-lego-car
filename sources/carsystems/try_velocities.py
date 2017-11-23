@@ -10,7 +10,7 @@ from VelocityController import VelocityController
 from Localization import Localization
 # from Mapping import Mapping
 from Point import Point
-from TrajectoryStuff import StraightLine, OnlyPoint
+from TrajectoryStuff import StraightLine
 from TrajectoryController import TrajectroryController
 
 if __name__ == "__main__":
@@ -34,19 +34,16 @@ if __name__ == "__main__":
     velocity_controller = VelocityController(LegoCar, -0.3, 0.3)
 
     # initialization of localization
-    localization = Localization(LegoCar)
+    # localization = Localization(LegoCar)
     # mapping = Mapping(LegoCar, sensor_us_front, sensor_us_rear)
 
-    trajectory_controller = TrajectroryController(0.1)
-    traj_line = StraightLine(Point(0, 1), Point(4, 1), 0.3)
-
-    traj_point = OnlyPoint(Point(1,1))
-
+    trajectory_controller = TrajectroryController(0)
+    traj_line = StraightLine(Point(1, 2), Point(3, 4), 0.3)
 
     os.system("beep -f 440 -l 42")
-    file_localization = open('localization.txt', 'w')   # time, x, t, theta
+    # file_localization = open('localization.txt', 'w')   # time, x, t, theta
 
-    # file_with_speed = open('file_with_speed.txt', 'w')
+    file_with_speed = open('file_with_speed.txt', 'w')
 
     start_time = time.time()
     t = time.time() - start_time
@@ -59,17 +56,15 @@ if __name__ == "__main__":
             theta, omega = [-x for x in gyro_sensor.rate_and_angle]   # !!! returns ANGLE AND RATE :)
 
             # mapping
-            x, y, vx, vy = localization.getData(theta * pi / 180, rear_motor.speed * pi / 180, dt)
+            # x, y, vx, vy = localization.getData(theta * pi / 180, rear_motor.speed * pi / 180, dt)
             # mapping.updateMap(x, y, theta * pi / 180)
 
+            # file_localization.write("{} {} {} {}\n".format(t, x, y, theta * pi / 180))
+
             # point_on_line = traj_line.getCoordinates(t)
-            point_to = traj_point.getCoordintes(t)
-
-
-            file_localization.write("{0} {1} {2} {3}\n".format(t, x, y, theta * pi / 180))
-            v_des, omega_des = trajectory_controller.getControls(point_to , x, y, vx, vy, theta, dt)
+            # v_des, omega_des = trajectory_controller.getControls(point_on_line, x, y, vx, vy, theta, dt)
             #
-            velocity_controller.setTargetVelocities(v_des, omega_des)
+            # velocity_controller.setTargetVelocities(v_des, omega_des)
 
             # moving forward
             u_v, u_phi = velocity_controller.getControls(rear_motor.speed * pi / 180.0,
@@ -78,7 +73,7 @@ if __name__ == "__main__":
             rear_motor.run_direct(duty_cycle_sp=u_v)
             steer_motor.run_direct(duty_cycle_sp=u_phi)
 
-            # file_with_speed.write("{} {} {}\n".format(t, omega * pi / 180, rear_motor.speed))
+            file_with_speed.write("{} {} {}\n".format(t, omega * pi / 180, rear_motor.speed))
 
             if halt.enter:
                 break
@@ -86,8 +81,8 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             break
 
-    # file_with_speed.close()
-    file_localization.close()
+    file_with_speed.close()
+    # file_localization.close()
     #
     # obstacles = mapping.the_map['obstacles']
     # x = obstacles['x']

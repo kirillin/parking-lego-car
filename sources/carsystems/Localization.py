@@ -5,7 +5,6 @@ class Localization:
 
     def __init__(self, car):
         self.__car = car
-        self.__theta_old = 0
         self.__x = 0
         self.__y = 0
 
