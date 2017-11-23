@@ -13,7 +13,6 @@ K = D_M / D_PX
 WIDTH_M = K * RESOLUTION[1]
 HEIGHT_M = K * RESOLUTION[0]
 
-
 class Marker:
 
     def __init__(self, cx, cy, cnt, color):
@@ -27,7 +26,10 @@ class Camera:
 
     def __init__(self, devNum):
         self.cap = cv2.VideoCapture(devNum)
-        self.frame = None
+	
+	self.cap.set(3,640)
+	self.cap.set(4,480)
+	self.frame = None
 
         # read standard of marker contour
         with np.load('circle.npz') as X:
@@ -63,18 +65,18 @@ class Camera:
 
         # mask = mask_b + mask_r
 
-        # # red-front
-        # lower = np.array([140, 30, 149])
-        # upper = np.array([188, 141, 197])
-        # mask_front = cv2.inRange(hsv, lower, upper) # red
+        # red-front
+        lower = np.array([140, 30, 149])
+        upper = np.array([188, 141, 197])
+        mask_front = cv2.inRange(hsv, lower, upper) # red
 
         # blue-back
         lower = np.array([92, 130, 136])
         upper = np.array([110, 242, 196])
         mask_rear = cv2.inRange(hsv, lower, upper)   # blue
 
-        mask = mask_rear
-        # mask = mask_front + mask_rear
+        # mask = mask_rear
+        mask = mask_front + mask_rear
         # cv2.imshow('mask', mask)
 
         # # for both circles
@@ -100,7 +102,7 @@ class Camera:
         frame = self.frame.copy()
         img_markers = cv2.bitwise_and(frame, frame, mask=mask)
 
-        cnts, hier = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        __, cnts, hier = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         # matching circles
         cnts_on_car_markers = []
@@ -111,7 +113,7 @@ class Camera:
                     cnts_on_car_markers.append(cnt)
 
         cnts_on_car_markers = cnts
-        # cv2.drawContours(self.frame, cnts, -1, (220,220,0), 1)
+        cv2.drawContours(self.frame, cnts, -1, (220,220,0), 1)
 
         # creation Marker objects
         marker_objs = []
@@ -144,7 +146,7 @@ class Camera:
     def draw_arrows(plt, frame, x, y, color):
 
         scale = 1
-        aspace = 1  # good value for scale of 1
+        aspace = 0.3  # good value for scale of 1
         aspace *= scale
 
         # r is the distance spanned between pairs of points
@@ -181,7 +183,7 @@ class Camera:
         for ax, ay, theta in arrowData:
             # use aspace as a guide for size and length of things
             # scaling factors were chosen by experimenting a bit
-            plt.arrow(ax, ay, np.sin(theta) * 0.1, np.cos(theta) * 0.1, head_width=0.05, head_length=0.1, color=color, width=0)
+            plt.arrow(ax, ay, np.sin(theta) * 0.2, np.cos(theta) * 0.2, head_width=0.1, head_length=0.2, color=color, width=0)
 
         plt.plot(x, y, color=color)
 
