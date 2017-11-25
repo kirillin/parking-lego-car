@@ -15,14 +15,6 @@ def mean(numbers):
     return float(sum(numbers)) / max(len(numbers), 1)
 
 
-def meanFilter(self, raw_data):
-    well_data = []
-    mean_data = mean([point.y for point in raw_data])
-    self.mean = mean_data
-    for point in raw_data:
-        if point.y > mean_data:
-            well_data.append(Point(point.x, point.y))
-    return well_data
 
 
 class Mapping:
@@ -37,6 +29,15 @@ class Mapping:
             'obstacles': {'front': [], 'rear': []}
         }
         self.mean = 0
+
+    def meanFilter(self, raw_data):
+        well_data = []
+        mean_data = mean([point.y for point in raw_data])
+        self.mean = mean_data
+        for point in raw_data:
+            if point.y > mean_data:
+                well_data.append(Point(point.x, point.y))
+        return well_data
 
 
     def updateMap(self, x_current, y_current, theta):
@@ -75,8 +76,8 @@ class Mapping:
 
     def filterMap(self):
         print("Quantity points with noize: ".format(self.the_map['obstacles']['front'] + self.the_map['obstacles']['rear']))
-        self.the_map['obstacles']['front'] = meanFilter(self.the_map['obstacles']['front'])
-        self.the_map['obstacles']['rear'] = meanFilter(self.the_map['obstacles']['rear'])
+        self.the_map['obstacles']['front'] = self.meanFilter(self.the_map['obstacles']['front'])
+        self.the_map['obstacles']['rear'] = self.meanFilter(self.the_map['obstacles']['rear'])
         print("Quantity points without noize: ".format(self.the_map['obstacles']['front'] + self.the_map['obstacles']['rear']))
 
     def findParkingPlace(self):

@@ -72,7 +72,7 @@ def main():
         else:
             frame_to_thresh = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     else:
-        camera = cv2.VideoCapture(1)
+        camera = cv2.VideoCapture('http://192.168.1.33:4747/mjpegfeed?640x480')
 
     setup_trackbars(range_filter)
 

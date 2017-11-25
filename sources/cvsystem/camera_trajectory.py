@@ -7,11 +7,12 @@ import numpy as np
 RESOLUTION = (640, 480)         # Width, Height
 FOVS = (43.78, 54.35, 65.47)    # vertical, horizontal, diagonal angles. Logitech 920FullHD (640, 480)
 H = 2.85                         # height from floor to camera
-D_M = 2 * H * np.tan(FOVS[2] / 2)
+D_M = 3.6
 D_PX = np.sqrt(RESOLUTION[0] ** 2 + RESOLUTION[1] ** 2)
 K = D_M / D_PX
 WIDTH_M = K * RESOLUTION[1]
 HEIGHT_M = K * RESOLUTION[0]
+print("metr in px {}".format(K))
 
 
 class Marker:
@@ -44,6 +45,11 @@ class Camera:
         m = K * px
         return m
 
+    @staticmethod
+    def m2px(px):
+        px = m / K
+        return px
+
     def get_mask(self):
         """
             Из изображении в динамическом цветовом диапазоне извлекаются
@@ -70,9 +76,9 @@ class Camera:
         mask = mask_front + mask_rear
 
 
-        lower = np.array([0, 199, 49])
-        upper = np.array([164, 255, 255])
-        mask = cv2.inRange(hsv, lower, upper)
+        #lower = np.array([0, 199, 49])
+        #upper = np.array([164, 255, 255])
+        #mask = cv2.inRange(hsv, lower, upper)
 
 
         cv2.imshow('mask', mask)
@@ -92,12 +98,12 @@ class Camera:
         frame = self.frame.copy()
         img_markers = cv2.bitwise_and(frame, frame, mask=mask)
 
-        # __, cnts, hier = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # for opencv 3.
-        cnts, hier = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        __, cnts, hier = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # for opencv 3.
+        # cnts, hier = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         # matching circles. Don't use? becouse markers is tooooo smaaaall
-        # cnts_on_car_markers = []
         # for cnt_std in self.std_cnt_marker:
+        # cnts_on_car_markers = []
         #     for cnt in cnts:
         #         ret = cv2.matchShapes(cnt, np.array(cnt_std, np.uint64), 1, 0)
         #         if ret < 1:
@@ -131,9 +137,11 @@ class Camera:
 
     @staticmethod
     def draw_arrows(plt, frame, x, y, color, angle):
-        for i in range(len(x)):
-            plt.arrow(x[i], y[i], np.sin(angle[i] + np.pi/2) * 0.01, np.cos(angle[i] + np.pi/2) * 0.01,
-                      head_width=0.1, head_length=0.2, color=color, width=0)
+        for i in range(0, len(x), 5):
+	    # print(angle[i] * 180 / np.pi)
+	    theta = -angle[i] + np.pi/2
+            plt.arrow(x[i], y[i], np.sin(theta) * 0.001, np.cos(theta) * 0.001,
+                      head_width=0.03, head_length=0.05, color=color, width=0)
 
         plt.plot(x, y, color=color)
 
