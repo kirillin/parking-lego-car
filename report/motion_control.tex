@@ -121,7 +121,7 @@
 \end{gather}
 
 Результаты запуска схемы моделирования, показанной на рисунке~\ref{img_control_system_modeling_scheme}\lefteqn{,}\footnote{В данной схеме в качестве модели робота-машинки использована модель~\eqref{eq_robot_kinematic_model}. Другими словами, блок Velocity Controller опущен <<за ненадобностью>>, и $v_{des} = v$,  $\omega_{des} = \omega$.} свидетельствуют о надлежащем функционировании этой системы управления (см.~рисунок~\ref{img_simulation_trajectory}).
-В~условиях же реальных экспериментов она показала себя неработоспособной (см.~рисунок~\ref{img_movement_experiments_results}).
+То же следует и из реальных экспериментов~--- см.~рисунок~\ref{img_movement_experiments_results}.
 
 \begin{figure}[h!]
     \centering{ \includegraphics[width=\textwidth]{lin_vel_ht_1.pdf} \\ a) \\}
@@ -153,17 +153,21 @@
     \label{img_control_system_modeling_scheme}
 \end{figure}
 
+\vspace{-1.2cm}
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{simulation_trajectory.pdf}
+    \includegraphics[width=0.8\textwidth]{simulation_trajectory.pdf}
     \vspace{0.0cm}
     \caption{Результаты запуска схемы моделирования.}
     \label{img_simulation_trajectory}
 \end{figure}
 
+\vspace{-1.2cm}
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{movement_experiments_results.pdf}
+    \includegraphics[width=0.8\textwidth]{movement_experiments_results_2.pdf}
     \vspace{0.0cm}
     \caption{Результат одного из экспериментов, проверяющего работоспособность системы управления движением.}
     \label{img_movement_experiments_results}
