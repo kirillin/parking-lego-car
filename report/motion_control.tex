@@ -82,8 +82,6 @@
     \item $X_{des}$~--- желаемое значение величины~$X$.
 \end{ESKDexplanation}
 
-\vspace{0.5cm}
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{control_system.pdf}
@@ -92,21 +90,83 @@
     \label{img_control_system}
 \end{figure}
 
+Входящие в блок Velocity Controller ПИД-регуляторы были настроены вручную.
+Качество их работы можно оценить из переходных функций, показанных на рисунках~\ref{img_v_pid} и~\ref{img_phi_pid}.
+
+Качество управления угловой скоростью по прямой связи, включающей в себя функцию $\arctg()$, можно оценить из рисунка~\ref{img_angular_speed_feedworward}.
+
 Формирование желаемых значений для линейной и угловой скоростей робота блоком Converter, а также расчет <<предварительных>> управляющих воздействий в блоке Simple Controller производятся в соответствии со следующими выражениями~\cite{de_luca}:
-\begin{equation}
+\begin{gather}
     \left\{
     \begin{aligned}
         & \dot{\xi} = u_1 \cos \theta + u_2 \sin \theta, \\
         & v_{des} = \xi, \\
-        & \omega_{des} = \frac{-u_1 \sin \theta + u_2 \cos \theta}{\xi},
+        & \omega_{des} = \frac{-u_1 \sin \theta + u_2 \cos \theta}{\bar\xi},
     \end{aligned}
     \right.
-\end{equation}
-\begin{equation}
+    \qquad
+    \bar\xi =
+    \begin{cases}
+        -0.01, & 0 > \xi \ge -0.01 \\
+        0.01, & 0 \leqslant \xi \leqslant 0.01 \\
+        \xi, & \text{иначе}
+    \end{cases}
+    \\
     \left\{
     \begin{aligned}
         & u_1 = \ddot{x}_r + k_{p1} (x_r - x) + k_{d1} (\dot{x}_r - \dot{x}), \\
         & u_2 = \ddot{y}_r + k_{p2} (y_r - y) + k_{d2} (\dot{y}_r - \dot{y})\ldotp
     \end{aligned}
     \right.
-\end{equation}
+\end{gather}
+
+Результаты запуска схемы моделирования, показанной на рисунке~\ref{img_control_system_modeling_scheme}\lefteqn{,}\footnote{В данной схеме в качестве модели робота-машинки использована модель~\eqref{eq_robot_kinematic_model}. Другими словами, блок Velocity Controller опущен <<за ненадобностью>>, и $v_{des} = v$,  $\omega_{des} = \omega$.} свидетельствуют о надлежащем функционировании этой системы управления (см.~рисунок~\ref{img_simulation_trajectory}).
+В~условиях же реальных экспериментов она показала себя неработоспособной (см.~рисунок~\ref{img_movement_experiments_results}).
+
+\begin{figure}[h!]
+    \centering{ \includegraphics[width=\textwidth]{lin_vel_ht_1.pdf} \\ a) \\}
+    \centering{ \includegraphics[width=\textwidth]{lin_vel_ht_2.pdf} \\ б) }
+    \caption{Переходные функции ПИД-регулятора, управляющего значением скорости~$v$: a~--- при $v_{des} > 0$, б~--- при $v_{des} < 0$.}
+    \label{img_v_pid}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering{ \includegraphics[width=\textwidth]{phi_ht_1.pdf} \\ a) \\}
+    \centering{ \includegraphics[width=\textwidth]{phi_ht_2.pdf} \\ б) }
+    \caption{Переходные функции ПИД-регулятора, управляющего значением угла~$\bar{\varphi}$:\\ а~--- при $v = 0$, б~--- при $v \ne 0$.}
+    \label{img_phi_pid}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering{ \includegraphics[width=\textwidth]{ang_vel_ht_1.pdf} \\ a) \\}
+    \centering{ \includegraphics[width=\textwidth]{ang_vel_ht_2.pdf} \\ б) }
+    \vspace{0.0cm}
+    \caption{Переходные функции системы управления угловой скоростью.}
+    \label{img_angular_speed_feedworward}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{control_system_modeling_scheme.pdf}
+    \vspace{0.0cm}
+    \caption{Схема моделирования системы управления движением робота.}
+    \label{img_control_system_modeling_scheme}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{simulation_trajectory.pdf}
+    \vspace{0.0cm}
+    \caption{Результаты запуска схемы моделирования.}
+    \label{img_simulation_trajectory}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{movement_experiments_results.pdf}
+    \vspace{0.0cm}
+    \caption{Результат одного из экспериментов, проверяющего работоспособность системы управления движением.}
+    \label{img_movement_experiments_results}
+\end{figure}
+
+\newpage \mbox{} \newpage \mbox{} \newpage \mbox{} \newpage
