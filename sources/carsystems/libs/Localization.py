@@ -1,7 +1,11 @@
-from math import sin, cos, tan
+from math import sin, cos
 
 
 class Localization:
+    """
+        Using Odometry (linear speed of rear motor) + gyro angle
+        compute position and velocity in cartesian space.
+    """
 
     def __init__(self, car):
         self.__car = car
@@ -9,7 +13,6 @@ class Localization:
         self.__y = 0
 
     def getData(self, theta, motor_speed, dt):
-
         # robot's velocity
         v = motor_speed * self.__car.R
 

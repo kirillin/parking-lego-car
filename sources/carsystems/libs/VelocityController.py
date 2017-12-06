@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from math import atan, pi
-from PID import PID
+from libs.PID import PID
 
 
 class VelocityController:
@@ -31,8 +31,14 @@ class VelocityController:
         error_phi = phi_desired - phi
         u_phi = self.pid_phi.getControl(error_phi, dt)
 
+        if abs(self.v_desired) < 0.05:
+            u_v, u_phi = 0, 0
+
         return u_v, u_phi
 
     def setTargetVelocities(self, v_desired, omega_desired):
         self.v_desired = v_desired
         self.omega_desired = omega_desired
+
+    def getTargetVelocities(self):
+        return self.v_desired, self.omega_desired

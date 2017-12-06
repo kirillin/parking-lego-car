@@ -1,14 +1,6 @@
 import math
-from Point import TrajectoryPoint
+from libs.Point import TrajectoryPoint
 
-
-# class TrajectoryGenerator:
-#
-#     def __init__(self, trajectory):
-#         self.trajectory = trajectory
-#
-#     def getCoordinates(self, t):
-#         return trajectory.getCoordinates(t)
 
 class OnlyPoint:
 
@@ -27,6 +19,8 @@ class StraightLine:
         self.v = v
         self.gamma = math.atan2(point_1.y - point_0.y,
                                 point_1.x - point_0.x)
+        self.x_now = point_0.x
+        self.y_now = point_0.y
 
     def getCoordinates(self, t):
         x_r = self.v * math.cos(self.gamma) * t + self.point_0.x
@@ -35,7 +29,12 @@ class StraightLine:
         y_r = self.v * math.sin(self.gamma) * t + self.point_0.y
         vy_r = self.v * math.sin(self.gamma)
         ay_r = 0
+        self.x_now = x_r
+        self.y_now = y_r
         return TrajectoryPoint(x_r, vx_r, ax_r, y_r, vy_r, ay_r)
+
+    def isEnd(self):
+        return
 
 
 class CircleLine:
