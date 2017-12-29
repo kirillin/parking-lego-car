@@ -4,7 +4,6 @@ import time
 class Clock:
     """
         Clock for compute delta time
-        !!! Don't forget updating before geting DT
     """
 
     __start_time = 0
@@ -13,7 +12,6 @@ class Clock:
     __dt = 0
 
     def __init__(self):
-        self.__old_dt = -1  # for checking you updated -_-
         self.reset()
 
     def reset(self):
@@ -28,21 +26,22 @@ class Clock:
         self.__last_time = self.__current_time
 
     def getDT(self):
-        if self.__dt == self.__old_dt:
-            print('Heey! Update clock!!1')
-        self.__old_dt = self.__dt
+        self.update()
         return self.__dt
 
     def getCurrentTime(self):
+        self.update()
         return self.__current_time
 
     def getTandDT(self):
+        self.update()
         return self.getCurrentTime(), self.getDT()
+
 
 if __name__ == '__main__':
     clock = Clock()
     while True:
-        clock.update()
+        # clock.update()
         t = clock.getCurrentTime()
         dt = clock.getDT()
         print(t, dt)
