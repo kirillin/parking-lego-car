@@ -1,4 +1,5 @@
-from libs.Point import Point
+from libs.TrajectoryStuff import Point
+
 
 def matmult(a, b):
     """Just multiply matrices a and b"""

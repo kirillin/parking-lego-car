@@ -5,7 +5,7 @@
 from math import cos, sin, hypot
 
 from libs.utils import matmult, meanFilter
-from libs.Point import Point
+from libs.TrajectoryStuff import Point
 
 MAX_VIEW_DISTANCE = 0.5     # [m] how far the robot can see
 NEED_FREE_SPACE = 0.3       # [m] how

@@ -1,5 +1,5 @@
 import math
-import sciscipy as scilab
+
 
 class Point:
 
@@ -35,11 +35,11 @@ class StraightLine(TrajectoryLine):
     def __init__(self, point_0, point_1, v):
         self.is_end = False
         self.point_0, self.point_1 = point_0, point_1
-        self.end_time = sqrt((point_1.y - point_0.y)**2 + (point_1.x - point_0.x)**2) / v
+        self.end_time = math.sqrt((point_1.y - point_0.y)**2 + (point_1.x - point_0.x)**2) / v
         self.gamma = math.atan2(point_1.y - point_0.y,
                                 point_1.x - point_0.x)
-        self.vx = self.v * math.cos(self.gamma)
-        self.vy = self.v * math.sin(self.gamma)
+        self.vx = v * math.cos(self.gamma)
+        self.vy = v * math.sin(self.gamma)
 
     def getCoordinates(self, t):
         if t > self.end_time:
@@ -48,7 +48,7 @@ class StraightLine(TrajectoryLine):
         else:
             x_r = self.vx * t + self.point_0.x
             y_r = self.vy * t + self.point_0.y
-            return TrajectoryPoint(x_r, vx_r, 0.0, y_r, vy_r, 0.0)
+            return TrajectoryPoint(x_r, self.vx, 0.0, y_r, self.vy, 0.0)
 
 
 class CircleLine(TrajectoryLine):

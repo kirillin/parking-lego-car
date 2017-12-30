@@ -10,17 +10,14 @@ class ControllerWithLinearization:
     Kp_2 = 5.76
     Kd_2 = 4.8
 
-
     def __init__(self, xi_0=0.1, xi_min=-0.35, xi_max=0.35, zero_safe_bound=0.01):
         self.xi = xi_0
         self.xi_min, self.xi_max = xi_min, xi_max
         self.zero_safe_bound = zero_safe_bound
         self.error_file = open('trajectory_errors.txt', 'w')
 
-
     def __delete__(self):
         self.error_file.close()
-
 
     def getControls(self, trajectory_point, x_cur, y_cur, dx_cur, dy_cur, theta, dt):
 
@@ -42,10 +39,10 @@ class ControllerWithLinearization:
         self.xi += dot_xi * dt
 
         # limitation of xi
-        if self.xi < x_min:
-            self.xi = xi_min
-        if self.xi > xi_max:
-            self.xi = xi_max
+        if self.xi < self.xi_min:
+            self.xi = self.xi_min
+        if self.xi > self.xi_max:
+            self.xi = self.xi_max
 
         # writing some of process info to file
         self.error_file.write("{0} {1} {2} {3} {4} {5} {6}\n".format(err_x, err_y, err_dx, err_dy, self.xi, u1, u2))
@@ -55,14 +52,13 @@ class ControllerWithLinearization:
             safe_xi = self.zero_safe_bound
         elif -self.zero_safe_bound < self.xi < 0:
             safe_xi = -self.zero_safe_bound
-        else
+        else:
             safe_xi = self.xi
 
         # speeds calculation and return
         v_des = self.xi
         omega_des = (- u1 * sin(theta) + u2 * cos(theta)) / safe_xi
         return v_des, omega_des
-
 
 
 class ControllerWithCoordinateTransform:

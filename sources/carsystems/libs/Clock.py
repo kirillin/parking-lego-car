@@ -26,11 +26,9 @@ class Clock:
         self.__last_time = self.__current_time
 
     def getDT(self):
-        self.update()
         return self.__dt
 
     def getCurrentTime(self):
-        self.update()
         return self.__current_time
 
     def getTandDT(self):
@@ -42,7 +40,6 @@ if __name__ == '__main__':
     clock = Clock()
     while True:
         # clock.update()
-        t = clock.getCurrentTime()
-        dt = clock.getDT()
+        t, dt = clock.getTandDT()
         print(t, dt)
         time.sleep(0.3)
