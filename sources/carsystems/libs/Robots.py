@@ -87,7 +87,7 @@ class LegoCar:
         while True:
             try:
                 t, dt = clock.getTandDT()
-                print(t, dt)
+
                 theta, omega = [-x for x in self.__sensor_gyro.rate_and_angle]  # !!! returns ANGLE AND RATE :)
 
                 # WONTFIX: In the mode of move is only velocities it is idle
