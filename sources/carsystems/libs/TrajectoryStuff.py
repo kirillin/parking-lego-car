@@ -54,13 +54,31 @@ class StraightLine(TrajectoryLine):
 class CircleLine(TrajectoryLine):
 
     def __init__(self, point_c, point_0, point_1, v):
+        self.is_end = False
         self.point_0, self.point_1 = point_0, point_1
-        self.R = R
-        self.v = v
+        angle_0 = math.atan2(point_0.y - point_c.y, point_0.x - point_c.x)
+        angle_1 = math.atan2(point_1.y - point_c.y, point_1.x - point_c.x)
+        delta_angle = angle_1 - angle_0
+        if delta_angle > math.pi:
+            delta_angle = delta_angle - 2 * math.pi;
+        elif delta_angle < -math.pi:
+            delta_angle = delta_angle + 2 * math.pi;
+        self.R = math.sqrt((point_0.y - point_c.y)**2 + (point_0.x - point_c.x)**2)
+        self.omega = v / self.R
+        self.end_time = abs(delta_angle * self.R) / v
 
     def getCoordinates(self, t):
-        alpha = self.v * t / self.R
-        x = self.point_0.x + self.R * math.sin(alpha)
+        if t > self.end_time:
+            self.is_end = True
+            return TrajectoryPoint(self.point_1.x, 0.0, 0.0, self.point_1.y, 0.0, 0.0)
+        else:
+            x_r = self.point_0.x + self.R * math.cos(self.omega * t)
+            y_r = self.point_0.y + self.R * math.sin(self.omega * t)
+            vx_r = - self.R * self.omega * math.sin(self.omega * t)
+            vy_r = self.R * self.omega * math.cos(self.omega * t)
+            ax_r = - self.R * self.omega**2 * math.cos(self.omega * t)
+            ay_r = - self.R * self.omega**2 * math.sin(self.omega * t)
+            return TrajectoryPoint(x_r, vx_r, ax_r, y_r, vy_r, ay_r)
 
 
 class ParkingLine(TrajectoryLine):
