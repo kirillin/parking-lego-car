@@ -71,14 +71,15 @@ class Mapping:
     def findParkingPlace(self):
         """
             The search space where it is possible to park the car.
-            Using only front sensor.
-            :returns list of points of start and end free space
+            !!! Using only front sensor.
+            :returns list of points of start and end free space [x_l, x_r]
         """
         parking_place = []
-        prev_point = self.the_map['obstacles']['front'][0]
-        for point in self.the_map['obstacles']['front']:
-            if abs(point.x - prev_point.x) > NEED_FREE_SPACE:
-                parking_place.append(prev_point)
+        last_point = self.the_map['obstacles']['front'][0]
+        for point in self.the_map['obstacles']['front'][1:]:
+            if abs(point.x - last_point.x) > NEED_FREE_SPACE:
+                parking_place.append(last_point)
                 parking_place.append(point)
                 break
+            last_point = point
         return parking_place
