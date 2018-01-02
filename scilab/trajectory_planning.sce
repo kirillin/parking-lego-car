@@ -28,7 +28,7 @@ endfunction
 ///////////////// BODY STARTS HERE/////////////////////
 ///////////////////////////////////////////////////////
 
-// for contact_point function definition
+// for definition of functions which find contact point
 path = get_absolute_file_path('trajectory_planning.sce');
 exec(path + 'contact_point.sci');
 
@@ -52,7 +52,7 @@ y_6 = y_l - d;
 x_7 = x_6;
 y_7 = y_6 + R;
 
-answ = contact_point([x_7, y_7], [x_4, y_4], R)
+answ = contact_point([x_7, y_7], [x_4, y_4], R);
 x_5 = answ(1);
 y_5 = answ(2);
 
@@ -68,11 +68,8 @@ y_2 = y_1;
 x_3 = x_8 - R*cos(alpha);
 y_3 = y_8 + R*sin(alpha);
 
-
 // plotting (be careful because it is in reverse order)
-plot(x_1, y_1,'g.');
-plot(x_l, y_l,'g.');
-plot(x_r, y_r,'g.');
+scf(0);
 // arc at the bottom
 plot_arc(x_7, y_7, x_6, y_6, x_5, y_5);
 // inclined line
@@ -81,7 +78,10 @@ plot2d([x_5:0.01:x_3], k*[x_5:0.01:x_3] + b, kolor);
 plot_arc(x_8, y_8, x_3, y_3, x_2, y_2);
 //horizontal line
 plot2d([x_2:0.01:x_1], y_1*ones([x_2:0.01:x_1]), kolor);
-
+// plotting of initial points
+plot(x_1, y_1,'g.');
+plot(x_l, y_l,'g.');
+plot(x_r, y_r,'g.');
 // for beauty
 plot(3.1,1.1);
 plot(0.9,-0.2);
