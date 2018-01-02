@@ -41,7 +41,8 @@ class RobotState:
 class LegoCar:
 
     # Parameters of the car
-    MAX_PHI = 0.61
+    HARD_MAX_PHI = 0.61
+    SOFT_MAX_PHI = 0.3
     R = 0.0432 / 2          # wheel radius
     L = 0.21 - R            # wheelbase
     D = 0.112               # distance between the axes of rotation of the front wheels
