@@ -90,24 +90,23 @@ class ParkingLine(TrajectoryLine):
         point_7 = Point(point_6.x, point_6.y + radius)
 
         # some other calculations
-        point_5 = findPoint5(point_7, point_4, radius)
-        point_8 = findPoint8(point_4, point_5, radius)
+        point_5 = self.findPoint5(point_7, point_4, radius)
+        point_8, point_3 = self.findPoints8And3(point_1, point_4, point_5, radius)
         point_2 = Point(point_8.x, point_1.y);
-        point_3 = Point(point_8.x - radius * cos(alpha), point_8.y + radius * sin(alpha))
 
         # pieces definition
         self.horiz_line = StraightLine(point_1, point_2, v)
         self.arc_first = CircleLine(point_8, point_2, point_3, v)
-        self.inclin_lin = StraightLine(point_3, point_5, v)
+        self.inclin_line = StraightLine(point_3, point_5, v)
         self.arc_final = CircleLine(point_7, point_5, point_6, v)
 
         # time calculation and some other things
         self.end_time = sum([x.end_time for x in [self.horiz_line, self.arc_first, self.inclin_line, self.arc_final]])
-        self.time_for = {"point_2": self.horiz_line.end_time, "point_3": self.horiz_line.end_time + self.arc_first.end_time, "point_5": self.end_time - self.arc_final.time}
+        self.time_for = {"point_2": self.horiz_line.end_time, "point_3": self.horiz_line.end_time + self.arc_first.end_time, "point_5": self.end_time - self.arc_final.end_time}
         self.point_6 = point_6
 
 
-    def findPoint5(point_7, point_4, radius):
+    def findPoint5(self, point_7, point_4, radius):
         """It finds coordinates of point_5 using Newton's method"""
         e = 1
         alpha = pi/4
@@ -118,12 +117,14 @@ class ParkingLine(TrajectoryLine):
         return Point(point_7.x + radius * sin(alpha), point_7.y - radius * cos(alpha))
 
 
-    def findPoint8(point_1, point_4, point_5, radius):
+    def findPoints8And3(self, point_1, point_4, point_5, radius):
         k = (point_4.y - point_5.y) / (point_4.x - point_5.x)
         alpha = atan(k)
         b = point_4.y - k * point_4.x
         h = radius / cos(alpha)
-        return Point(1.0 / k * (point_1.y - radius - b + h), point_1.y - radius)
+        point_8 = Point(1.0 / k * (point_1.y - radius - b + h), point_1.y - radius)
+        point_3 = Point(point_8.x - radius * cos(alpha), point_8.y + radius * sin(alpha))
+        return point_8, point_3
 
 
     def getCoordinates(self, t):
@@ -133,7 +134,7 @@ class ParkingLine(TrajectoryLine):
         elif t > self.time_for["point_5"]:
             return self.arc_final.getCoordinates(t - self.time_for["point_5"])
         elif t > self.time_for["point_3"]:
-            return self.inclin_lin.getCoordinates(t - self.time_for["point_3"])
+            return self.inclin_line.getCoordinates(t - self.time_for["point_3"])
         elif t > self.time_for["point_2"]:
             return self.arc_first.getCoordinates(t - self.time_for["point_2"])
         else:
