@@ -95,21 +95,20 @@
 
 Качество управления угловой скоростью по прямой связи, включающей в себя функцию $\arctg()$, можно оценить из рисунка~\ref{img_angular_speed_feedworward}.
 
-Формирование желаемых значений для линейной и угловой скоростей робота блоком Converter, а также расчет <<предварительных>> управляющих воздействий в блоке Simple Controller производятся в соответствии со следующими выражениями~\cite{de_luca}:
+Формирование желаемых значений для линейной и угловой скоростей робота блоком Converter, а также расчет <<предварительных>> управляющих воздействий в блоке <<Simple Controller>> производятся в соответствии со следующими выражениями~\cite{de_luca}:
 \begin{gather}
     \left\{
     \begin{aligned}
         & \dot{\xi} = u_1 \cos \theta + u_2 \sin \theta, \\
         & v_{des} = \xi, \\
-        & \omega_{des} = \frac{-u_1 \sin \theta + u_2 \cos \theta}{\bar\xi},
+        & \omega_{des} = \bar\omega_{des},
     \end{aligned}
     \right.
     \qquad
-    \bar\xi =
+    \bar\omega_{des} =
     \begin{cases}
-        -0.01, & 0 > \xi \ge -0.01 \\
-        0.01, & 0 \leqslant \xi \leqslant 0.01 \\
-        \xi, & \text{иначе}
+        \cfrac{-u_1 \sin \theta + u_2 \cos \theta}{\xi}, & \xi \ne 0 \\
+        0, & \xi = 0
     \end{cases}
     \\
     \left\{
@@ -173,4 +172,4 @@
     \label{img_movement_experiments_results}
 \end{figure}
 
-\newpage \mbox{} \newpage \mbox{} \newpage \mbox{} \newpage
+\newpage \mbox{} \newpage \mbox{} \newpage \mbox{} \newpage \mbox{} \newpage
